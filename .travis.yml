@@ -1,13 +1,14 @@
+language: c # or other C/C++ variants 
+cache: ccache
+
 env:
     global:
         - REPO_DIR=scipy
         # Also see DAILY_COMMIT below
         - BUILD_COMMIT=master
         - PLAT=x86_64
-        - NP_BUILD_DEP="numpy==1.14.5"
-        - CYTHON_BUILD_DEP="Cython==0.29.18"
+        - CYTHON_BUILD_DEP="Cython==0.29.14"
         - PYBIND11_BUILD_DEP="pybind11==2.4.3"
-        - NP_TEST_DEP="numpy==1.14.5"
         - UNICODE_WIDTH=32
         - MANYLINUX_URL="https://5cf40426d9f06eb7461d-6fe47d9331aba7cd62fc36c7196769e4.ssl.cf2.rackcdn.com"
         - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
@@ -28,65 +29,56 @@ jobs:
       # Exclude the default Python 3.5 build
       - python: 3.5
   include:
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
-        - NP_BUILD_DEP=numpy==1.14.5
-        - NP_TEST_DEP=numpy==1.14.5
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
-        - PLAT=i686
-        - NP_BUILD_DEP=numpy==1.14.5
-        - NP_TEST_DEP=numpy==1.14.5
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.7
-        - NP_BUILD_DEP=numpy==1.14.5
-        - NP_TEST_DEP=numpy==1.14.5
-        - CYTHON_BUILD_DEP="Cython"
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.8
-        - NP_BUILD_DEP=numpy==1.17.3
-        - NP_TEST_DEP=numpy==1.17.3
-        - CYTHON_BUILD_DEP="Cython"
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.8
-        - PLAT=i686
-        - NP_BUILD_DEP=numpy==1.17.3
-        - NP_TEST_DEP=numpy==1.17.3
-        - CYTHON_BUILD_DEP="Cython"
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.7
-        - PLAT=i686
-        - NP_BUILD_DEP=numpy==1.14.5
-        - NP_TEST_DEP=numpy==1.14.5
-        - CYTHON_BUILD_DEP="Cython"
-    - os: osx
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.6
-        - NP_BUILD_DEP=numpy==1.14.5
-        - NP_TEST_DEP=numpy==1.14.5
-    - os: osx
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.7
-        - NP_BUILD_DEP=numpy==1.14.5
-        - NP_TEST_DEP=numpy==1.14.5
-        - CYTHON_BUILD_DEP="Cython"
-    - os: osx
-      language: generic
-      osx_image: xcode10.1
-      env:
-        - MB_PYTHON_VERSION=3.8
-        - NP_BUILD_DEP=numpy==1.17.3
-        - NP_TEST_DEP=numpy==1.17.3
-        - CYTHON_BUILD_DEP="Cython"
-        - MB_PYTHON_OSX_VER=10.9
+      - stage: build wheel
+        os: linux
+        env:
+          - MB_PYTHON_VERSION=3.7
+          - PLAT=i686
+          - NP_BUILD_DEP=numpy==1.14.5
+          - NP_TEST_DEP=numpy==1.14.5
+          - CYTHON_BUILD_DEP="Cython"
+        install:
+          - echo "Install amd job testing if works"
+        script: 
+          - echo "script amd job testing if works"
+        after_success: 
+          - echo "after_success amd job testing if works"
+         
+      - os: linux
+        arch: arm64
+        env:
+          - MB_PYTHON_VERSION=3.7
+          - PLAT=aarch64
+          - DOCKER_TEST_IMAGE=multibuild/xenial_arm64v8
+          - DOCKER_IMAGE=quay.io/pypa/manylinux2014_${PLAT}
+          - CYTHON_BUILD_DEP="Cython"
+        script:
+          - echo "Skipping script"
+        workspaces:
+          create:
+            name: ws1
+            paths:
+              - scipy/dist
+              - wheelhouse
+        after_success:
+          - echo "Skipping after success"
+      - stage: test wheel
+        env:
+          - MB_PYTHON_VERSION=3.7
+          - PLAT=aarch64
+          - DOCKER_TEST_IMAGE=multibuild/xenial_arm64v8
+          - DOCKER_IMAGE=quay.io/pypa/manylinux2014_${PLAT}
+          - CYTHON_BUILD_DEP="Cython"
+        arch: arm64
+        workspaces:
+          use: ws1
+        install:
+          - echo "Skipping install "
+        script:
+          - echo "Overiding script to get info if fails"
+          - ls scipy/dist || true
+          - ls wheelhouse || true
+          - install_run $PLAT
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
@@ -120,8 +112,6 @@ after_success:
     # used in Travis CI config, originally
     # generated at anaconda.org for scipy-wheels-nightly
     - if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then
-          source extra_functions.sh;
-          for f in wheelhouse/*.whl; do rename_wheel $f; done;
           ANACONDA_ORG="scipy-wheels-nightly";
           pip install git+https://github.com/Anaconda-Server/anaconda-client;
           anaconda -t ${SCIPY_WHEELS_NIGHTLY} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
@@ -135,3 +125,4 @@ after_success:
           pip install git+https://github.com/Anaconda-Server/anaconda-client;
           anaconda -t ${SCIPY_STAGING_UPLOAD_TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
       fi
+      
