@@ -7,7 +7,30 @@ function build_wheel {
     if [ -z "$IS_OSX" ]; then
         unset FFLAGS
         export LDFLAGS="-shared -Wl,-strip-all"
-        build_libs $PLAT
+        #build_libs $PLAT
+	if [ "aarch64" != "$PLAT" ]; then
+            build_libs $PLAT;
+	else
+            yum update -y;
+            yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
+            pip --version;
+            pip install https://files.pythonhosted.org/packages/0e/7a/10d4e79e0d141522736f41875e167041230c357351a512d2d8dcaeeb615d/numpy_mkp2020-1.14.5-cp37-cp37m-manylinux2014_aarch64.whl;
+            #wget https://download-ib01.fedoraproject.org/pub/epel/7/aarch64/Packages/c/ccache-3.3.4-1.el7.aarch64.rpm;
+            #rpm -Uvh ccache-3.3.4-1.el7.aarch64.rpm;
+            #wget https://perso.univ-rennes1.fr/edouard.canot/f90cache/f90cache-0.99c.tar.gz;
+            #tar -xzf f90cache-0.99c.tar.gz;
+            #cd f90cache-0.99c;
+            #./configure --prefix=/usr/local;
+            #make -j32 && make install;
+            #cd /usr/bin/;
+            #sudo ln -s gfortran /usr/local/bin/gfortran;
+            #sudo ln -s ccache /usr/local/bin/gcc;
+            #sudo ln -s ccache /usr/local/bin/cc;
+            #sudo ln -s ccache /usr/local/bin/c++;
+            #sudo ln -s ccache /usr/local/bin/g++;
+            #sudo ln -s ccache /usr/local/bin/aarch64-linux-gnu-g++;
+            #sudo ln -s ccache /usr/local/bin/aarch64-linux-gnu-gcc;
+        fi
         # Work round build dependencies spec in pyproject.toml
         build_bdist_wheel $@
     else
@@ -71,7 +94,7 @@ function run_tests {
     # Check bundled license file
     python ../check_installed_package.py
     # Run tests
-    python ../run_scipy_tests.py $testmode -- -n2 -rfEX
+    python ../run_scipy_tests.py $testmode -- -n8 -rfEX
     # Show BLAS / LAPACK used
     python -c 'import scipy; scipy.show_config()'
 }
