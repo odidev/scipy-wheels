@@ -94,7 +94,7 @@ function run_tests {
     # Check bundled license file
     python ../check_installed_package.py
     # Run tests
-    python ../run_scipy_tests.py $testmode -- -n16 -rfEX
+    python ../run_scipy_tests.py $testmode -- -n8 -rfEX
     # Show BLAS / LAPACK used
     python -c 'import scipy; scipy.show_config()'
 }
