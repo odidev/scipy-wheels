@@ -78,7 +78,7 @@ jobs:
           - echo "Overiding script to get info if fails"
           - ls scipy/dist || true
           - ls wheelhouse || true
-          - install_run $PLAT || travis_terminate $?
+          - travis_wait 30 install_run $PLAT
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
