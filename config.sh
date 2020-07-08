@@ -14,7 +14,8 @@ function build_wheel {
             yum update -y;
             yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
             pip --version;
-            pip install https://files.pythonhosted.org/packages/0e/7a/10d4e79e0d141522736f41875e167041230c357351a512d2d8dcaeeb615d/numpy_mkp2020-1.14.5-cp37-cp37m-manylinux2014_aarch64.whl;
+	    pip install numpy
+            #pip install https://files.pythonhosted.org/packages/0e/7a/10d4e79e0d141522736f41875e167041230c357351a512d2d8dcaeeb615d/numpy_mkp2020-1.14.5-cp37-cp37m-manylinux2014_aarch64.whl;
             #wget https://download-ib01.fedoraproject.org/pub/epel/7/aarch64/Packages/c/ccache-3.3.4-1.el7.aarch64.rpm;
             #rpm -Uvh ccache-3.3.4-1.el7.aarch64.rpm;
             #wget https://perso.univ-rennes1.fr/edouard.canot/f90cache/f90cache-0.99c.tar.gz;
