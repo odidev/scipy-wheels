@@ -15,7 +15,7 @@ def main():
     args = p.parse_args()
 
     #import scipy
-    print("Scipy: {} {}".format(scipy.__version__, scipy.__path__))
+    #print("Scipy: {} {}".format(scipy.__version__, scipy.__path__))
     #ret = scipy.test(args.test_mode, extra_argv=args.pytest_args)
 
     
