@@ -14,10 +14,24 @@ def main():
     p.add_argument('pytest_args', metavar='PYTEST_ARGS', nargs='*')
     args = p.parse_args()
 
-    import scipy
+    #import scipy
     print("Scipy: {} {}".format(scipy.__version__, scipy.__path__))
-    ret = scipy.test(args.test_mode, extra_argv=args.pytest_args)
+    #ret = scipy.test(args.test_mode, extra_argv=args.pytest_args)
 
+    
+    
+    
+    import scipy.stats
+    
+    pytest_args = args.pytest_args
+    pytest_args += ['--durations=20']
+    ret = scipy.stats.test(args.test_mode, extra_argv=pytest_args, verbose=2)
+    
+    
+    
+    
+    
+    
     if hasattr(ret, 'wasSuccessful'):
         # Nosetests version
         ret = ret.wasSuccessful()
