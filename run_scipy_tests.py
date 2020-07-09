@@ -21,11 +21,16 @@ def main():
     
     
     
+    import scipy.special
     import scipy.stats
     
     pytest_args = args.pytest_args
     pytest_args += ['--durations=20']
+    ret = scipy.special.test(args.test_mode, extra_argv=pytest_args, verbose=2)
     ret = scipy.stats.test(args.test_mode, extra_argv=pytest_args, verbose=2)
+    import scipy.weave
+    ret = scipy.weave.test(args.test_mode, extra_argv=pytest_args, verbose=2)
+    
     
     
     
