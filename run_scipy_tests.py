@@ -14,22 +14,24 @@ def main():
     p.add_argument('pytest_args', metavar='PYTEST_ARGS', nargs='*')
     args = p.parse_args()
 
-    #import scipy
-    #print("Scipy: {} {}".format(scipy.__version__, scipy.__path__))
-    #ret = scipy.test(args.test_mode, extra_argv=args.pytest_args)
+    import scipy
+    pytest_args = args.pytest_args
+    pytest_args += ['--durations=20']
+    print("Scipy: {} {}".format(scipy.__version__, scipy.__path__))
+    ret = scipy.test(args.test_mode, extra_argv=args.pytest_args)
 
     
     
     
-    import scipy.special
-    import scipy.stats
-    
-    pytest_args = args.pytest_args
-    pytest_args += ['--durations=20']
-    ret = scipy.special.test(args.test_mode, extra_argv=pytest_args, verbose=2)
-    ret = scipy.stats.test(args.test_mode, extra_argv=pytest_args, verbose=2)
-    import scipy.weave
-    ret = scipy.weave.test(args.test_mode, extra_argv=pytest_args, verbose=2)
+    #import scipy.special
+    #import scipy.stats
+    #
+    #pytest_args = args.pytest_args
+    #pytest_args += ['--durations=20']
+    #ret = scipy.special.test(args.test_mode, extra_argv=pytest_args, verbose=2)
+    #ret = scipy.stats.test(args.test_mode, extra_argv=pytest_args, verbose=2)
+    #import scipy.weave
+    #ret = scipy.weave.test(args.test_mode, extra_argv=pytest_args, verbose=2)
     
     
     
