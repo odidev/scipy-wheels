@@ -18,7 +18,7 @@ def main():
     pytest_args = args.pytest_args
     pytest_args += ['--durations=20']
     print("Scipy: {} {}".format(scipy.__version__, scipy.__path__))
-    ret = scipy.test(args.test_mode, extra_argv=args.pytest_args)
+    ret = scipy.test('fast', extra_argv=args.pytest_args)
 
     
     
