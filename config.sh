@@ -12,6 +12,7 @@ function build_wheel {
             build_libs $PLAT;
 	else
             yum update -y;
+            yum autoremove g77 -y;
             yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
             pip --version;
 	    pip install numpy
