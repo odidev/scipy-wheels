@@ -12,7 +12,6 @@ function build_wheel {
             build_libs $PLAT;
 	else
             yum update -y;
-            yum autoremove g77 -y;
             yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
             pip --version;
 	    pip install numpy
@@ -88,6 +87,7 @@ function build_osx_wheel {
 function run_tests {
     # Runs tests on installed distribution from an empty directory
     # OSX tests seem to time out pretty often
+    yum autoremove g77 -y
     if [ -z "$IS_OSX" ]; then
         local testmode="full"
     else
