@@ -87,7 +87,11 @@ function build_osx_wheel {
 function run_tests {
     # Runs tests on installed distribution from an empty directory
     # OSX tests seem to time out pretty often
-    yum autoremove g77 -y
+    apt update -y
+    apt remove --purge g77
+    apt install libatlas-base-dev libblas-dev liblapack-dev
+    apt autoremove -y
+    
     if [ -z "$IS_OSX" ]; then
         local testmode="full"
     else
