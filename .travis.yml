@@ -27,23 +27,6 @@ os: linux
 jobs:
   exclude:
       # Exclude the default Python 3.5 build
-      - python: 3.5
-  include:
-      - stage: build wheel
-        os: linux
-        env:
-          - MB_PYTHON_VERSION=3.7
-          - PLAT=i686
-          - NP_BUILD_DEP=numpy==1.14.5
-          - NP_TEST_DEP=numpy==1.14.5
-          - CYTHON_BUILD_DEP="Cython"
-        install:
-          - echo "Install amd job testing if works"
-        script: 
-          - echo "script amd job testing if works"
-        after_success: 
-          - echo "after_success amd job testing if works"
-         
       - os: linux
         arch: arm64
         env:
@@ -80,6 +63,10 @@ jobs:
           - ls scipy/dist || true
           - ls wheelhouse || true
           - install_run $PLAT
+        before_deploy:
+                - echo "Skipping before deploy while running tests"
+        deploy:
+                - echo "Skipping deploy while running tests"
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
@@ -126,4 +113,18 @@ after_success:
           pip install git+https://github.com/Anaconda-Server/anaconda-client;
           anaconda -t ${SCIPY_STAGING_UPLOAD_TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
       fi
-      
+
+before_deploy:
+    # Set up git user name and tag this commit
+    - git config --local user.name "odidev"
+    - git config --local user.email "odidev@puresoftware.com"
+    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+    - git tag $TRAVIS_TAG
+
+deploy:
+  provider: releases
+  api_key:
+    secure: BS/zYlv5jOmY+L+r9CwYAP6dmHIZ9U6zguxb98xay+lZNdDwnxhLtQ8dFPqC8dfTNFQhyap0linksdWLmRIGi7uaSVXi7VlB9F2jbtC+qHGtFJxyaoS7Pt1ELG1FDRRY4Bnwoj0EhjtPPHCbthClmQqXMFfS2Fp9H6yENq0JfF+T8DNFT6tKra8/XivpSfSe5io8QSw7yJygsXDve+4ekhiO6HmSraIPaO47rU56Be1drXfvZXE9TXfCQ8xRPxc1p6BeNXjCFxXcFkK0jc6xCyDdL2i4Ydh0TcJ7bg4EDqE1ff/ztDPWAu3QfBo0pxkWM+1FUMeforZTTHY3rhSwB8gfxqO7Msa+4AbADqNoiogjslFIyGARRvwGZLNUVCOqRfDx+w686oF0YBLE7bUFdM5ttKT+4A7i7ti6G2jEYb3Qggu0B0uEnfm1zOtqQU155hgwlr40qSMRfETIaNbjxyeB5+Hcy5+Mu56MPyq+zT4Obmb8Wgi0+V2qpJkLsA44B6mYb9djiOq7AE3AqxQcTEHuI9yBpaOgo2y/VHBEk1dOCXCw7pUMyOlvMGL2C9kmoZfMNQgJfUykNHaCk0z6GIftwia8XSxlIWp/M2fYIiY2qG5wOxE/sRnlTXlngBY8Wq3KSCNLGA9+yEKKuWtF1nfS30NCAxT6+aWn2iNIJE4=
+  on:
+    repo: odidev/scipy-wheels
+  skip_cleanup: 'true'
