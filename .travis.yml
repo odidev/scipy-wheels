@@ -27,7 +27,8 @@ os: linux
 jobs:
   exclude:
       # Exclude the default Python 3.5 build
-      - os: linux
+      - stage: build wheel
+        os: linux
         arch: arm64
         env:
           - MB_PYTHON_VERSION=3.7
