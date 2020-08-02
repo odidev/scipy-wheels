@@ -27,8 +27,28 @@ os: linux
 jobs:
   exclude:
       # Exclude the default Python 3.5 build
+      - python: 3.5
+  include:
       - stage: build wheel
         os: linux
+        env:
+          - MB_PYTHON_VERSION=3.7
+          - PLAT=i686
+          - NP_BUILD_DEP=numpy==1.14.5
+          - NP_TEST_DEP=numpy==1.14.5
+          - CYTHON_BUILD_DEP="Cython"
+        install:
+          - echo "Install amd job testing if works"
+        script: 
+          - echo "script amd job testing if works"
+        after_success: 
+          - echo "after_success amd job testing if works"
+        before_deploy:
+                - echo "Skipping before deploy while running tests"
+        deploy:
+                - echo "Skipping deploy while running tests"
+         
+      - os: linux
         arch: arm64
         env:
           - MB_PYTHON_VERSION=3.7
