@@ -137,6 +137,7 @@ after_success:
 
 before_deploy:
     # Set up git user name and tag this commit
+    - upload_file=`ls wheelhouse/*whl`
     - git config --local user.name "odidev"
     - git config --local user.email "odidev@puresoftware.com"
     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
@@ -146,6 +147,7 @@ deploy:
   provider: releases
   api_key:
     secure: BS/zYlv5jOmY+L+r9CwYAP6dmHIZ9U6zguxb98xay+lZNdDwnxhLtQ8dFPqC8dfTNFQhyap0linksdWLmRIGi7uaSVXi7VlB9F2jbtC+qHGtFJxyaoS7Pt1ELG1FDRRY4Bnwoj0EhjtPPHCbthClmQqXMFfS2Fp9H6yENq0JfF+T8DNFT6tKra8/XivpSfSe5io8QSw7yJygsXDve+4ekhiO6HmSraIPaO47rU56Be1drXfvZXE9TXfCQ8xRPxc1p6BeNXjCFxXcFkK0jc6xCyDdL2i4Ydh0TcJ7bg4EDqE1ff/ztDPWAu3QfBo0pxkWM+1FUMeforZTTHY3rhSwB8gfxqO7Msa+4AbADqNoiogjslFIyGARRvwGZLNUVCOqRfDx+w686oF0YBLE7bUFdM5ttKT+4A7i7ti6G2jEYb3Qggu0B0uEnfm1zOtqQU155hgwlr40qSMRfETIaNbjxyeB5+Hcy5+Mu56MPyq+zT4Obmb8Wgi0+V2qpJkLsA44B6mYb9djiOq7AE3AqxQcTEHuI9yBpaOgo2y/VHBEk1dOCXCw7pUMyOlvMGL2C9kmoZfMNQgJfUykNHaCk0z6GIftwia8XSxlIWp/M2fYIiY2qG5wOxE/sRnlTXlngBY8Wq3KSCNLGA9+yEKKuWtF1nfS30NCAxT6+aWn2iNIJE4=
+  file: $upload_file
   on:
     repo: odidev/scipy-wheels
   skip_cleanup: 'true'
