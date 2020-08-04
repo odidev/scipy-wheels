@@ -13,9 +13,10 @@ function build_wheel {
 	else
             yum update -y;
             #yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
-            yum install -y atlas-devel lapack-devel gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
+            #yum install -y atlas-devel lapack-devel gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
+            yum install -y lapack-devel gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
             #build_libs $PLAT;
-            yum autoremove devtoolset-9-gcc-gfortran.aarch64 -y
+            #yum autoremove devtoolset-9-gcc-gfortran.aarch64 -y
             pip --version;
             #pip install numpy
             pip install https://files.pythonhosted.org/packages/0e/7a/10d4e79e0d141522736f41875e167041230c357351a512d2d8dcaeeb615d/numpy_mkp2020-1.14.5-cp37-cp37m-manylinux2014_aarch64.whl;
