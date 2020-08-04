@@ -13,6 +13,7 @@ function build_wheel {
 	else
             yum update -y;
             #yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
+            #yum install -y atlas-devel lapack-devel gcc-gfortran gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
             yum install -y atlas-devel lapack-devel gmp-devel mpfr-devel suitesparse-devel swig libmpc-devel wget;
             #build_libs $PLAT;
             yum autoremove devtoolset-9-gcc-gfortran.aarch64 -y
