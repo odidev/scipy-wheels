@@ -71,11 +71,7 @@ function run_tests {
     # Check bundled license file
     python ../check_installed_package.py
     # Run tests
-    if [[ -z "$IS_OSX" && `uname -m` != 'aarch64' ]]; then
-        python ../run_scipy_tests.py $testmode -- -n2 -rfEX
-    else
-        python ../run_scipy_tests.py $testmode -- -n8 -rfEX
-    fi
+    python ../run_scipy_tests.py $testmode -- -n2 -rfEX
     # Show BLAS / LAPACK used
     python -c 'import scipy; scipy.show_config()'
 }
